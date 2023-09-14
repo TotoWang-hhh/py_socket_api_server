@@ -1,0 +1,18 @@
+===PyVP Server 命令帮助===
+==single==
+start			=server.start
+pause			=server.pause
+exit			退出
+help			帮助
+==info==
+showinfo			显示所有信息
+uptime			显示启动时间
+status			显示服务端状态
+==log==
+add <logtype> <text>	添加日志
+==server==
+start			启动服务器
+pause			暂停服务器
+
+命令帮助存储于cmdhelp.txt
+命令代码存储于serverconsole/
