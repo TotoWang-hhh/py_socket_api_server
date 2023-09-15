@@ -17,3 +17,9 @@
 ### 2023/09/14
 
 - 独立一份名为Py Socket API Server的副本，删除PyVP Server原有API并发布
+
+## 0.1.1.pysas
+
+### 2023/09/15
+
+- 修改所有eval()为exec()解决import报错问题

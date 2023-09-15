@@ -40,7 +40,7 @@ def _run(cmd):
                 paramstr+=str(p)+','
         #print(paramstr)
         #print('serverconsole.'+pycmd+'('+'server'+paramstr+')')
-        eval("import serverconsole."+pycmd)
+        exec("import serverconsole."+pycmd.split('.')[0])
         returntxt=eval('serverconsole.'+pycmd+'('+'server,'+paramstr+')')
         return str(returntxt)
     except Exception as e:
@@ -61,8 +61,8 @@ def _run(cmd):
         #print('serverconsole.'+pycmd+'('+'server'+paramstr+')')
         returntxt=eval('serverconsole.single.'+pycmd+'('+'server,'+paramstr+')')
         return str(returntxt)
-    except Exception as e:
-        warnings.warn(str(pycmd)+' Not Found'+'\n'+str(e))
+    finally:
+        warnings.warn(str(pycmd)+' Not Found'+'\n')
         return 'Function '+str(pycmd)+' not found'
 
 def run(cmd):
@@ -90,12 +90,13 @@ server_t.start()
 
 if noui:
     while True:
-        cmd=input('PyVP Server> ')
+        cmd=input('PySAS Server> ')
         print(_run(cmd))
+    exit()
 
 
 win=tk.Tk()
-win.title('PyVP Server UI')
+win.title('PySAS UI')
 
 
 loglst=ui.LogList(win,width=300)
@@ -108,7 +109,7 @@ loglst.frame.pack_propagate(False)
 
 consolept=tk.Frame(win)
 
-cmdinput=tttk.TipEnter(consolept,text='PyVP Server>',command=lambda:print('PLEASE WAIT'),btntxt='↑ RUN')
+cmdinput=tttk.TipEnter(consolept,text='PySAS Server>',command=lambda:print('PLEASE WAIT'),btntxt='↑ RUN')
 cmdinput.command=lambda:run(cmdinput.get())
 cmdinput.refresh()
 cmdinput.pack(side=tk.BOTTOM,fill=tk.X)

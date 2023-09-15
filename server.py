@@ -32,6 +32,7 @@ class Server():
             except Exception as e:
                 self.log_with_binded('warning','DATA DECODE ERROR '+str(e)+' (disconnected)')
                 resmsg='无法处理您的请求！温馨提示：请注意IP是否正确 | Cannot handle your request! Tip: Plese Check the IP address'
+                self.send(client,resmsg)
                 break
             #设置退出条件
             if strData == 'q' or strData == '':
@@ -45,6 +46,7 @@ class Server():
                 errmsgf.write('FROM: '+str(address)+'\n====================\n\n'+strData)
                 errmsgf.close()
                 resmsg=json.dumps({'error':'NOT JSON'})
+                self.send(client,resmsg)
                 break
             self.log_with_binded('info',"RECV < %s" % strData)
             paramjson=jsonmsg
@@ -63,8 +65,10 @@ class Server():
                 resmsg=json.dumps(resraw)
             else:
                 resmsg=str(resraw)
-            self.log_with_binded('info','SEND > %s' % resmsg)
-            client.send(resmsg.encode("utf-8"))
+            self.send(client,resmsg)
+    def send(self,client,msg):
+        self.log_with_binded('info','SEND > %s' % msg)
+        client.send(msg.encode("utf-8"))
     def start(self):
         self.isrunning=True
         self.run()
@@ -114,7 +118,7 @@ class Server():
             #params.pop[1]
             #print(paramstr)
             #print('serverconsole.'+pycmd+'('+'server'+paramstr+')')
-            eval('import response.'+pycmd)
+            exec('import response.'+pycmd.split('.')[0])
             result=eval('response.'+pycmd+'('+str(params)+')')
             return result
         except Exception as e:
@@ -135,7 +139,7 @@ class Server():
             #print('serverconsole.'+pycmd+'('+'server'+paramstr+')')
             result=eval('response.single.'+pycmd+'('+'server,'+str(params)+')')
             return result
-        except Exception as e:
-            warnings.warn(str(pycmd)+' Not Found'+'\n'+str(e))
+        finally:
+            self.log_with_binded('warning',str(pycmd)+' Not Found'+'\n')
             return {"Error":'API '+str(pycmd)+' not found'}
 
